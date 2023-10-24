@@ -1,13 +1,13 @@
 import type { NextPage } from 'next';
-import Footer from './footer';
-import Header from './header';
+import Footer from '../components/footer';
+import Header from '../components/header';
 import styles from '../styles/Home.module.css';
 
-type Props = {
-  children?: React.ReactNode;
-};
+type LayoutProps = Required<{
+  readonly children?: React.ReactElement;
+}>;
 
-const PageLayout: NextPage = ({ children }: Props) => {
+const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <Header />
@@ -19,4 +19,4 @@ const PageLayout: NextPage = ({ children }: Props) => {
   );
 };
 
-export default PageLayout;
+export default Layout;
