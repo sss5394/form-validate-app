@@ -9,11 +9,10 @@ export function trimSpace(targetStr: string | null): string {
 }
 
 // 指定文字を削除
-export function deleteChar(targetStr: string | null, delChar: char): string {
-  // 空の場合は加工せず返却
-  if (!chkNotNull(targetStr)) return targetStr;
-
-  return targetStr.replace(delChar, '');
+export function deleteChar(targetStr: string | null, delChar: string): string {
+  // 空またはNullの場合は空文字を返却
+  if (chkNotNull(targetStr)) return targetStr!.replace(delChar, '');
+  return '';
 }
 
 /**
@@ -28,9 +27,9 @@ export function chkNotNull(targetStr: string | null): boolean {
 }
 
 // 文字列バイト長取得
-export function getLengthByte(targetStr: string): boolean {
+export function getLengthByte(targetStr: string): number {
   targetStr = trimSpace(targetStr);
-  const length = encodeURIComponent(str).replace(/%../g, 'x').length;
+  const length = encodeURIComponent(targetStr).replace(/%../g, 'x').length;
   return length;
 }
 
@@ -48,9 +47,9 @@ export function chkDate(targetStr: string | null): boolean {
 
   if (getLengthByte(targetStr) != 8 || !chkNumber(targetStr)) return false;
 
-  const year = targetStr.substr(0, 4);
-  const month = targetStr.substr(4, 6);
-  const day = targetStr.substr(6, 8);
+  const year = Number(targetStr.substring(0, 4));
+  const month = Number(targetStr.substring(4, 6));
+  const day = Number(targetStr.substring(6, 8));
 
   const dayOfMonth = new Array(31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
@@ -61,7 +60,7 @@ export function chkDate(targetStr: string | null): boolean {
 }
 
 // 閏年チェック
-function chkLeapYear(year: string): boolean {
+function chkLeapYear(year: number): boolean {
   if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) return true;
   return false;
 }
@@ -88,7 +87,7 @@ export function chkPosFloat(targetStr: string | null): boolean {
   targetStr = trimSpace(targetStr);
 
   const regexp = /^[0-9]+(\.[0-9]+)?$/;
-  if (regexp.test(str)) return true;
+  if (regexp.test(targetStr)) return true;
   else return false;
 }
 
@@ -100,6 +99,6 @@ export function chkNumber(targetStr: string | null): boolean {
   targetStr = trimSpace(targetStr);
 
   const regexp = /^[\d]+$/;
-  if (regexp.test(str)) return true;
+  if (regexp.test(targetStr)) return true;
   else return false;
 }
