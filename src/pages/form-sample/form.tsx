@@ -1,10 +1,28 @@
 import type { NextPageWithLayout } from 'next';
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import * as FormDef from './form-def';
 import * as Validation from '../../common/validation';
 import styles from '../../styles/Form.module.css';
-import { useForm } from 'react-hook-form';
 import Layout from '@/layout/layout';
+
+// 入力データ定義
+export type InputData = {
+  name: string;
+  postCode: string;
+  address: string;
+  dateFrom: string;
+  dateTo: string;
+  mail: string;
+};
+
+// Form初期値
+export const initialValues = {
+  name: '',
+  postCode: '',
+  address: '',
+  dateFrom: '',
+  dateTo: '',
+  mail: '',
+};
 
 const SystemErrorMessage = {
   MESSAGE_001: '送信エラー発生',
@@ -15,9 +33,7 @@ const FormPage: NextPageWithLayout = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [errorMessageList, setErrorMessageList] = useState<string[] | null>([]);
-  const [inputData, setInputData] = useState<FormDef.InputData>(
-    FormDef.initialValues
-  );
+  const [inputData, setInputData] = useState<InputData>(initialValues);
 
   // 送信
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
