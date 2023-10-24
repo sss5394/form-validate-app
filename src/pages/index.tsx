@@ -1,13 +1,9 @@
-import type { NextPage } from 'next';
-import Layout from '../layout/layout';
-import Home from './home';
+import { NextPageWithLayout } from 'next';
+import Layout from '@/layout/layout';
+import HomePage from '@/pages/home/home';
 
-const App: NextPage = () => {
-  return (
-    <Layout>
-      <Home />
-    </Layout>
-  );
-};
+const Home: NextPageWithLayout = () => <HomePage />;
 
-export default App;
+Home.getLayout = (page) => <Layout>{page}</Layout>;
+
+export default Home;

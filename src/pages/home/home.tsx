@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 import Link from 'next/link';
 
-const Home: NextPage = () => {
+const HomePage: NextPage = () => {
   return (
     <>
       <h1 className='title'>Home</h1>
@@ -12,4 +12,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default HomePage;
