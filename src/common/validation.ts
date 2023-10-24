@@ -288,7 +288,7 @@ export function validateProhibitChar(
 }
 
 // 年月正当性チェック（yyyy/mm）.
-export function validateDateYM(
+export function validateDateYYYYMMSlash(
   targetStr: string | null,
   itemName: string
 ): ValidationResult {
@@ -308,7 +308,7 @@ export function validateDateYM(
 }
 
 // 年月日正当性チェック（yyyy/mm/dd）.
-export function validateDateYMD(
+export function validateDateYYYYMMDDSlash(
   targetStr: string | null,
   itemName: string
 ): ValidationResult {
@@ -316,6 +316,46 @@ export function validateDateYMD(
   const checkNg: ValidationResult = {
     checkResult: false,
     errorMMessagge: itemName + 'が年月形式（YYYY/MM/DD）と一致しません.',
+  };
+
+  // 空の場合はチェックしない
+  if (!StringUtills.chkNotNull(targetStr)) return checkOk;
+
+  if (targetStr?.length != 10) return checkNg;
+
+  if (StringUtills.chkDate(targetStr)) return checkOk;
+  return checkNg;
+}
+
+// 年月正当性チェック（yyyy-mm）.
+export function validateDateYYYYMMHyphen(
+  targetStr: string | null,
+  itemName: string
+): ValidationResult {
+  // NG結果
+  const checkNg: ValidationResult = {
+    checkResult: false,
+    errorMMessagge: itemName + 'が年月形式（YYYY-MM）と一致しません.',
+  };
+
+  // 空の場合はチェックしない
+  if (!StringUtills.chkNotNull(targetStr)) return checkOk;
+
+  if (targetStr?.length != 7) return checkNg;
+
+  if (StringUtills.chkDate(targetStr + '-01')) return checkOk;
+  return checkNg;
+}
+
+// 年月日正当性チェック（yyyy-mm-dd）.
+export function validateDateYYYYMMDDHyphen(
+  targetStr: string | null,
+  itemName: string
+): ValidationResult {
+  // NG結果
+  const checkNg: ValidationResult = {
+    checkResult: false,
+    errorMMessagge: itemName + 'が年月形式（YYYY-MM-DD）と一致しません.',
   };
 
   // 空の場合はチェックしない

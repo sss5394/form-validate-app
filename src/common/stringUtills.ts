@@ -1,3 +1,12 @@
+const DATE_FORMAT = {
+  YYYYMMDD: /^[0-9]+8$/,
+  YYYY_MM_DD_SLASH: /^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/,
+  YYYY_MM_DD_HYPHEN: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/,
+  YYYYMM: /^[0-9]+6$/,
+  YYYY_MM_SLASH: /^[0-9]{4}\/[0-9]{2}$/,
+  YYYY_MM_HYPHEN: /^[0-9]{4}-[0-9]{2}$/,
+} as const;
+
 /**
  *　文字列加工
  */
@@ -43,7 +52,22 @@ export function chkDate(targetStr: string | null): boolean {
   if (!chkNotNull(targetStr)) return true;
 
   targetStr = trimSpace(targetStr);
-  targetStr = deleteChar(targetStr, '/');
+
+  // フォーマット判定
+  const format = chkFormat(targetStr!);
+
+  // 区切り文字除去
+  if (
+    DATE_FORMAT.YYYY_MM_DD_HYPHEN === format ||
+    DATE_FORMAT.YYYY_MM_HYPHEN === format
+  ) {
+    targetStr = deleteChar(targetStr, '-');
+  } else if (
+    DATE_FORMAT.YYYY_MM_DD_SLASH === format ||
+    DATE_FORMAT.YYYY_MM_SLASH === format
+  ) {
+    targetStr = deleteChar(targetStr, '/');
+  }
 
   if (getLengthByte(targetStr) != 8 || !chkNumber(targetStr)) return false;
 
@@ -63,6 +87,22 @@ export function chkDate(targetStr: string | null): boolean {
 function chkLeapYear(year: number): boolean {
   if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) return true;
   return false;
+}
+
+// 日付フォーマット判定
+// 一致するFormatが存在しない場合はNull
+function chkFormat(targetStr: string): RegExp | null {
+  if (DATE_FORMAT.YYYYMMDD.test(targetStr)) return DATE_FORMAT.YYYYMMDD;
+  if (DATE_FORMAT.YYYY_MM_DD_SLASH.test(targetStr))
+    return DATE_FORMAT.YYYY_MM_DD_SLASH;
+  if (DATE_FORMAT.YYYY_MM_DD_HYPHEN.test(targetStr))
+    return DATE_FORMAT.YYYY_MM_DD_HYPHEN;
+  if (DATE_FORMAT.YYYYMM.test(targetStr)) return DATE_FORMAT.YYYYMM;
+  if (DATE_FORMAT.YYYY_MM_SLASH.test(targetStr))
+    return DATE_FORMAT.YYYY_MM_SLASH;
+  if (DATE_FORMAT.YYYY_MM_HYPHEN.test(targetStr))
+    return DATE_FORMAT.YYYY_MM_HYPHEN;
+  return null;
 }
 
 /**
