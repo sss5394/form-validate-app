@@ -1,25 +1,20 @@
-import type { NextPage } from 'next';
+import type { NextPageWithLayout } from 'next';
 import React, { useState, FormEvent, ChangeEvent } from 'react';
 import * as FormDef from './form-def';
 import * as Validation from '../../common/validation';
 import styles from '../../styles/Form.module.css';
 import { useForm } from 'react-hook-form';
+import Layout from '@/layout/layout';
 
 const SystemErrorMessage = {
   MESSAGE_001: '送信エラー発生',
 } as const;
 
-const FormPage: NextPage = () => {
-  // ロード状態
+const FormPage: NextPageWithLayout = () => {
+  // ロード状態、エラー状態、エラーメッセージList、入力データ
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // エラー状態
   const [error, setError] = useState<string | null>(null);
-
-  // エラーメッセージList
   const [errorMessageList, setErrorMessageList] = useState<string[] | null>([]);
-
-  // 入力データ
   const [inputData, setInputData] = useState<FormDef.InputData>(
     FormDef.initialValues
   );
@@ -33,12 +28,8 @@ const FormPage: NextPage = () => {
 
     const formData = new FormData(event.currentTarget);
 
-    const a = 1;
-
-    console.log(formData);
-
     // 入力チェック
-    setErrorMessageList(validation(formData));
+    setErrorMessageList(validation());
 
     if (errorMessageList && errorMessageList.length == 0) {
       try {
@@ -60,11 +51,13 @@ const FormPage: NextPage = () => {
       } finally {
         setIsLoading(false);
       }
+    } else {
+      setIsLoading(false);
     }
   }
 
   // 入力チェック
-  function validation(formData: FormData): string[] {
+  function validation(): string[] {
     // エラーメッセージ
     let messageList: Array<string> = [];
 
@@ -74,7 +67,7 @@ const FormPage: NextPage = () => {
     let result: Validation.ValidationResult;
 
     // 名前
-    item = formData.get('name') as string;
+    item = inputData.name;
     itemName = 'Name';
 
     // 必須チェック
@@ -89,7 +82,7 @@ const FormPage: NextPage = () => {
     }
 
     // 住所
-    item = formData.get('address') as string;
+    item = inputData.address;
     itemName = 'Address';
     result = Validation.validateHarfChar(item, itemName);
     if (!result.checkResult) {
@@ -106,6 +99,7 @@ const FormPage: NextPage = () => {
       [name]: value,
     });
   };
+
   return (
     <div className={styles.container}>
       <h1>form Sample</h1>
@@ -114,7 +108,11 @@ const FormPage: NextPage = () => {
         {errorMessageList && (
           <ul>
             {errorMessageList.map((message, index) => {
-              return <li key={index}>{message}</li>;
+              return (
+                <li id={'error' + index} key={'error' + index}>
+                  {message}
+                </li>
+              );
             })}
           </ul>
         )}
@@ -195,4 +193,6 @@ const FormPage: NextPage = () => {
   );
 };
 
+// レイアウト設定（共通レイアウト）
+FormPage.getLayout = (page) => <Layout>{page}</Layout>;
 export default FormPage;
