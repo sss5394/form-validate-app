@@ -11,24 +11,39 @@
   margin-top: 1rem;
   min-height: 1.5rem;
   font-size: 1rem;
-  width: 600px;
+  width: 700px;
 }
 
 /* 入力要素（ラベル） */
 .item label{
+  vertical-align: top;
   display: inline-block;
   text-align: right;
-  width: 80px;
+  width: 100px;
+}
+
+.item label.linkage{
+  text-align: center;
 }
 
 /* 入力要素（ラベル必須マーク） */
 .item label span.required{
   color: red;
+  margin-right: 5px;
 }
 
-/* 入力要素（入力欄） */
+/* 入力要素（input） */
 .item input{
-  margin-left: 10px
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 200px;
+}
+
+/* 入力要素（textarea） */
+.item textarea {
+  margin-left: 10px;
+  width: 300px;
+  height: 100px;
 }
 
 /* 入力要素（ボタン） */

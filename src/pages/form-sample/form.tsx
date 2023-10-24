@@ -6,22 +6,36 @@ import Layout from '@/layout/layout';
 
 // 入力データ定義
 export type InputData = {
-  name: string;
+  nameJa: string;
+  id: string;
+  giftCode: string;
+  firstNameEn: string;
+  lastNameEn: string;
   postCode: string;
   address: string;
   dateFrom: string;
   dateTo: string;
+  birthDay: string;
   mail: string;
+  phone: string;
+  free: string;
 };
 
 // Form初期値
 export const initialValues = {
-  name: '',
+  nameJa: '',
+  id: '',
+  giftCode: '',
+  firstNameEn: '',
+  lastNameEn: '',
   postCode: '',
   address: '',
   dateFrom: '',
   dateTo: '',
+  birthDay: '',
   mail: '',
+  phone: '',
+  free: '',
 };
 
 const SystemErrorMessage = {
@@ -83,16 +97,11 @@ const FormPage: NextPageWithLayout = () => {
     let result: Validation.ValidationResult;
 
     // 名前
-    item = inputData.name;
-    itemName = 'Name';
+    item = inputData.nameJa;
+    itemName = '名前';
 
     // 必須チェック
     result = Validation.validateRequired(item, itemName);
-    if (!result.checkResult) {
-      messageList.push(result.errorMMessagge);
-    }
-    // 半角チェック
-    result = Validation.validateHarfChar(item, itemName);
     if (!result.checkResult) {
       messageList.push(result.errorMMessagge);
     }
@@ -108,7 +117,9 @@ const FormPage: NextPageWithLayout = () => {
     return messageList;
   }
 
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = event.target;
     setInputData({
       ...inputData,
@@ -134,14 +145,56 @@ const FormPage: NextPageWithLayout = () => {
         )}
         <div className={styles.item}>
           <label htmlFor='name'>
-            <span className={styles.required}>*</span>Name
+            <span className={styles.required}>*</span>名前
           </label>
           <input
             type='text'
             id='name'
             name='name'
-            placeholder='name'
-            value={inputData.name}
+            placeholder='田中太郎'
+            value={inputData.nameJa}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className={styles.item}>
+          <label htmlFor='firstNameEn'>FirstName</label>
+          <input
+            type='text'
+            id='firstNameEn'
+            name='firstNameEn'
+            placeholder='Taro'
+            value={inputData.firstNameEn}
+            onChange={handleInputChange}
+          />
+          <label htmlFor='lastNameEn'>LastName</label>
+          <input
+            type='text'
+            id='lastNameEn'
+            name='lastNameEn'
+            placeholder='Tanaka'
+            value={inputData.lastNameEn}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className={styles.item}>
+          <label htmlFor='id'>ID</label>
+          <input
+            type='text'
+            id='id'
+            name='id'
+            placeholder='12345678'
+            value={inputData.id}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className={styles.item}>
+          <label htmlFor='giftCode'>ギフトコード</label>
+          <input
+            type='text'
+            id='giftCode'
+            name='giftCode'
+            placeholder='abc1234'
+            value={inputData.giftCode}
             onChange={handleInputChange}
           />
         </div>
@@ -151,39 +204,61 @@ const FormPage: NextPageWithLayout = () => {
             type='text'
             id='postCode'
             name='postCode'
-            placeholder='post code'
+            placeholder='111-1111'
             value={inputData.postCode}
             onChange={handleInputChange}
           />
         </div>
         <div className={styles.item}>
-          <label htmlFor='address'>Address</label>
+          <label htmlFor='address'>住所</label>
           <input
             type='text'
             id='address'
             name='address'
-            placeholder='address'
+            placeholder='東京都○○区×××'
             value={inputData.address}
             onChange={handleInputChange}
           />
         </div>
         <div className={styles.item}>
-          <label htmlFor='dateFrom'>Date</label>
+          <label htmlFor='dateFrom'>希望訪問日</label>
           <input
             type='date'
             id='dateFrom'
             name='dateFrom'
-            placeholder='From'
             value={inputData.dateFrom}
             onChange={handleInputChange}
           />
-          <label htmlFor='dateTo'>~</label>
+          <label htmlFor='dateTo' className={styles.linkage}>
+            ~
+          </label>
           <input
             type='date'
             id='dateTo'
             name='dateTo'
-            placeholder='Date(To)'
             value={inputData.dateTo}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className={styles.item}>
+          <label htmlFor='birthDay'>誕生日</label>
+          <input
+            type='text'
+            id='birthDay'
+            name='birthDay'
+            placeholder='2000/01/01'
+            value={inputData.birthDay}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className={styles.item}>
+          <label htmlFor='phone'>電話番号</label>
+          <input
+            type='text'
+            id='phone'
+            name='phone'
+            placeholder='×××-××××-××××'
+            value={inputData.phone}
             onChange={handleInputChange}
           />
         </div>
@@ -193,8 +268,18 @@ const FormPage: NextPageWithLayout = () => {
             type='text'
             id='mail'
             name='mail'
-            placeholder='mail'
+            placeholder='×××××@××××.××.××'
             value={inputData.mail}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className={styles.item}>
+          <label htmlFor='mail'>備考</label>
+          <textarea
+            id='free'
+            name='free'
+            placeholder=''
+            value={inputData.free}
             onChange={handleInputChange}
           />
         </div>
