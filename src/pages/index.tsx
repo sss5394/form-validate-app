@@ -1,13 +1,12 @@
 import type { NextPage } from 'next';
-import Link from 'next/link';
-import PageLayout from '../components/pageLayout';
+import Layout from '../layout/layout';
 import Home from './home';
 
 const App: NextPage = () => {
   return (
-    <PageLayout>
-      <Home/>
-    </PageLayout>
+    <Layout>
+      <Home />
+    </Layout>
   );
 };
 
