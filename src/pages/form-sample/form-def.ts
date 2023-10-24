@@ -1,5 +1,19 @@
-export type FormValues = {
+// 入力データ定義
+export type InputData = {
   name: string;
-  addrres: string;
+  postCode: string;
+  address: string;
+  dateFrom: string;
+  dateTo: string;
   mail: string;
+};
+
+// Form初期値
+export const initialValues = {
+  name: '',
+  postCode: '',
+  address: '',
+  dateFrom: '',
+  dateTo: '',
+  mail: '',
 };

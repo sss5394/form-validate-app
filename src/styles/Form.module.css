@@ -1,11 +1,12 @@
+/* Formをラッパーするクラス */
 .container {
-  padding: 6rem;
-  /* ないと上に詰まる */
+  padding: 8rem;
   flex-direction: column;
   display: flex;
   align-items: center;
-  /* 横方向に中央に揃える、かつ長さを短くしている */
 }
+
+/* 入力要素（全体） */
 .item {
   margin-top: 1rem;
   min-height: 1.5rem;
@@ -13,16 +14,24 @@
   width: 600px;
 }
 
+/* 入力要素（ラベル） */
 .item label{
   display: inline-block;
   text-align: right;
   width: 80px;
 }
 
+/* 入力要素（ラベル必須マーク） */
+.item label span.required{
+  color: red;
+}
+
+/* 入力要素（入力欄） */
 .item input{
   margin-left: 10px
 }
 
+/* 入力要素（ボタン） */
 .item button {
   width: 70px;
   height: 20px;
