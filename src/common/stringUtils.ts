@@ -1,4 +1,4 @@
-const DATE_FORMAT = {
+export const DATE_FORMAT = {
   YYYYMMDD: /^[0-9]+8$/,
   YYYY_MM_DD_SLASH: /^[0-9]{4}\/[0-9]{2}\/[0-9]{2}$/,
   YYYY_MM_DD_HYPHEN: /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/,
@@ -13,14 +13,14 @@ const DATE_FORMAT = {
 
 // 文字列をトリム（NULLは空文字）.
 export function trimSpace(targetStr: string | null): string {
-  if (targetStr === null) targetStr = '';
+  if (targetStr === null || targetStr === undefined) targetStr = '';
   return targetStr.trim();
 }
 
 // 指定文字を削除
 export function deleteChar(targetStr: string | null, delChar: string): string {
   // 空またはNullの場合は空文字を返却
-  if (chkNotNull(targetStr)) return targetStr!.replace(delChar, '');
+  if (chkNotNull(targetStr)) return targetStr!.replaceAll(delChar, '');
   return '';
 }
 
@@ -31,8 +31,9 @@ export function deleteChar(targetStr: string | null, delChar: string): string {
 // NULL・空文字チェック.
 export function chkNotNull(targetStr: string | null): boolean {
   targetStr = trimSpace(targetStr);
-  if (targetStr != null && targetStr != '') return true;
-  else return false;
+  if (targetStr === null || targetStr === undefined || targetStr === '') {
+    return false;
+  } else return true;
 }
 
 // 文字列バイト長取得
@@ -91,7 +92,7 @@ function chkLeapYear(year: number): boolean {
 
 // 日付フォーマット判定
 // 一致するFormatが存在しない場合はNull
-function chkFormat(targetStr: string): RegExp | null {
+export function chkFormat(targetStr: string): RegExp | null {
   if (DATE_FORMAT.YYYYMMDD.test(targetStr)) return DATE_FORMAT.YYYYMMDD;
   if (DATE_FORMAT.YYYY_MM_DD_SLASH.test(targetStr))
     return DATE_FORMAT.YYYY_MM_DD_SLASH;

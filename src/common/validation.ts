@@ -1,38 +1,40 @@
-import * as StringUtills from './stringUtills';
+import * as StringUtills from './stringUtils';
 
+// チェック結果.
 export type ValidationResult = {
   checkResult: boolean;
   errorMMessagge: string;
 };
 
-// チェック結果OK字レスポンス
+// チェック結果OK字レスポンス.
 const checkOk: ValidationResult = {
   checkResult: true,
   errorMMessagge: '',
 };
 
-// Windows機種依存文字
+// Windows機種依存文字.
 const WINDOWS_SP_CHAR =
-  '①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳' +
+  '[①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳' +
   'ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩ' +
-  '㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗㌍㌦㌣㌫㍊㌻' +
-  '㎜㎝㎞㎎㎏㏄㎡〝〟№㏍℡' +
-  '㊤㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼㍻' +
-  '≒≡∫∮∑√⊥∠∟⊿∵∩∪';
+  '㍉㌔㌢㍍㌘㌧㌃㌶㍑㍗㌍㌦㌣㌫㍊㌻㎜㎝㎞㎎㎏㏄㎡' +
+  '〝〟№㏍℡㊤㊥㊦㊧㊨㈱㈲㈹㍾㍽㍼㍻' +
+  '≒≡∫∮∑√⊥∠∟⊿∵∩∪]';
 
-//  正規表現チェック
+//  正規表現チェック.
+export type RegexpCheck = typeof regexpCheck;
 function regexpCheck(regexp: RegExp, targetStr: string): boolean {
   if (regexp.test(targetStr)) return true;
   return false;
 }
 
 /**
- * 必須チェック
+ * 必須チェック.
  */
 
 // 必須チェック.
+export type ValidateRequired = typeof validateRequired;
 export function validateRequired(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -46,9 +48,10 @@ export function validateRequired(
 }
 
 // 連動必須チェック（両入力 or 両空欄）.
-function validateRequiredItems(
-  targetStr1: string | null,
-  targetStr2: string | null,
+export type ValidateRequiredItems = typeof validateRequiredItems;
+export function validateRequiredItems(
+  targetStr1: string,
+  targetStr2: string,
   itemName1: string,
   itemName2: string
 ): ValidationResult {
@@ -69,12 +72,13 @@ function validateRequiredItems(
 }
 
 /**
- * 文字種チェック
+ * 文字種チェック.
  */
 
-// 半角チェック
+// 半角チェック.
+export type ValidateHarfChar = typeof validateHarfChar;
 export function validateHarfChar(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -92,9 +96,10 @@ export function validateHarfChar(
   return checkNg;
 }
 
-// 半角チェック（改行有）
+// 半角チェック（改行有）.
+export type ValidateHarfCharMultiLine = typeof validateHarfCharMultiLine;
 export function validateHarfCharMultiLine(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -113,9 +118,10 @@ export function validateHarfCharMultiLine(
   return checkNg;
 }
 
-// 半角英数チェック
+// 半角英数チェック.
+export type ValidateHarfAlphabetNumber = typeof validateHarfAlphabetNumber;
 export function validateHarfAlphabetNumber(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -135,8 +141,9 @@ export function validateHarfAlphabetNumber(
 }
 
 // 半角英字チェック.
+export type ValidateHalfAlphabet = typeof validateHalfAlphabet;
 export function validateHalfAlphabet(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -156,14 +163,15 @@ export function validateHalfAlphabet(
 }
 
 // 半角数字チェック
-export function chkHarfNumber(
-  targetStr: string | null,
+export type ValidateHarfNumber = typeof validateHarfNumber;
+export function validateHarfNumber(
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
   const checkNg: ValidationResult = {
     checkResult: false,
-    errorMMessagge: itemName + 'は半角英字で入力してください.',
+    errorMMessagge: itemName + 'は半角数字で入力してください.',
   };
 
   // 空の場合はチェックしない
@@ -181,8 +189,9 @@ export function chkHarfNumber(
  */
 
 // 半角最大桁一致チェック.
+export type ValidateMaxHalfLength = typeof validateMaxHalfLength;
 export function validateMaxHalfLength(
-  targetStr: string | null,
+  targetStr: string,
   len: number,
   itemName: string
 ): ValidationResult {
@@ -200,8 +209,9 @@ export function validateMaxHalfLength(
   else return checkNg;
 }
 // 桁数チェック(全半角混在).
+export type ValidateLength = typeof validateLength;
 export function validateLength(
-  targetStr: string | null,
+  targetStr: string,
   len: number,
   itemName: string
 ): ValidationResult {
@@ -220,9 +230,10 @@ export function validateLength(
   return checkNg;
 }
 
-// 文字数チェック.
-export function validateWordLength(
-  targetStr: string | null,
+// 文字数最大値チェック.
+export type ValidateWordLengthMax = typeof validateWordLengthMax;
+export function validateWordLengthMax(
+  targetStr: string,
   len: number,
   itemName: string
 ): ValidationResult {
@@ -241,9 +252,32 @@ export function validateWordLength(
   return checkNg;
 }
 
+// 文字数最小値チェック.
+export type ValidateWordLengthMin = typeof validateWordLengthMin;
+export function validateWordLengthMin(
+  targetStr: string,
+  len: number,
+  itemName: string
+): ValidationResult {
+  // NG結果
+  const checkNg: ValidationResult = {
+    checkResult: false,
+    errorMMessagge: itemName + 'は' + len + '桁以上入力してください.',
+  };
+
+  // 空の場合はチェックしない
+  if (!StringUtills.chkNotNull(targetStr)) return checkOk;
+
+  targetStr = StringUtills.trimSpace(targetStr);
+
+  if (len <= targetStr.length) return checkOk;
+  return checkNg;
+}
+
 // 半角桁数チェック.
+export type ValidateHalfLength = typeof validateHalfLength;
 export function validateHalfLength(
-  targetStr: string | null,
+  targetStr: string,
   len: number,
   itemName: string
 ): ValidationResult {
@@ -267,8 +301,9 @@ export function validateHalfLength(
  */
 
 // 禁則文字チェック.
+export type ValidateProhibitChar = typeof validateProhibitChar;
 export function validateProhibitChar(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -282,14 +317,67 @@ export function validateProhibitChar(
 
   targetStr = StringUtills.trimSpace(targetStr);
 
-  const regexp = new RegExp('[' + WINDOWS_SP_CHAR + ']');
-  if (regexpCheck(regexp, targetStr)) return checkOk;
+  const regexp = new RegExp(WINDOWS_SP_CHAR);
+
+  if (regexpCheck(regexp, targetStr)) return checkNg;
+  return checkOk;
+}
+
+/**
+ * 日時チェック
+ */
+
+// 年月形式・正当性チェック（yyyymm）.
+export type ValidateDateYYYYMM = typeof validateDateYYYYMM;
+export function validateDateYYYYMM(
+  targetStr: string,
+  itemName: string
+): ValidationResult {
+  // NG結果
+  const checkNg: ValidationResult = {
+    checkResult: false,
+    errorMMessagge: itemName + 'が年月形式（YYYYMM）と一致しません.',
+  };
+
+  // 空の場合はチェックしない
+  if (!StringUtills.chkNotNull(targetStr)) return checkOk;
+
+  // フォーマットに一致しない場合はNG
+  if (StringUtills.chkFormat(targetStr) !== StringUtills.DATE_FORMAT.YYYYMM) {
+    return checkNg;
+  }
+  if (StringUtills.chkDate(targetStr)) return checkOk;
   return checkNg;
 }
 
-// 年月正当性チェック（yyyy/mm）.
+// 年月日形式・正当性チェック（yyyymmdd）.
+export type ValidateDateYYYYMMDD = typeof validateDateYYYYMMDD;
+export function validateDateYYYYMMDD(
+  targetStr: string,
+  itemName: string
+): ValidationResult {
+  // NG結果
+  const checkNg: ValidationResult = {
+    checkResult: false,
+    errorMMessagge: itemName + 'が年月形式（YYYYMMDD）と一致しません.',
+  };
+
+  // 空の場合はチェックしない
+  if (!StringUtills.chkNotNull(targetStr)) return checkOk;
+
+  // フォーマットに一致しない場合はNG
+  if (StringUtills.chkFormat(targetStr) !== StringUtills.DATE_FORMAT.YYYYMMDD) {
+    return checkNg;
+  }
+
+  if (StringUtills.chkDate(targetStr)) return checkOk;
+  return checkNg;
+}
+
+// 年月形式・正当性チェック（yyyy/mm）.
+export type ValidateDateYYYYMMSlash = typeof validateDateYYYYMMSlash;
 export function validateDateYYYYMMSlash(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -301,15 +389,21 @@ export function validateDateYYYYMMSlash(
   // 空の場合はチェックしない
   if (!StringUtills.chkNotNull(targetStr)) return checkOk;
 
-  if (targetStr?.length != 7) return checkNg;
+  // フォーマットに一致しない場合はNG
+  if (
+    StringUtills.chkFormat(targetStr) !== StringUtills.DATE_FORMAT.YYYY_MM_SLASH
+  ) {
+    return checkNg;
+  }
 
   if (StringUtills.chkDate(targetStr + '/01')) return checkOk;
   return checkNg;
 }
 
-// 年月日正当性チェック（yyyy/mm/dd）.
+// 年月日形式・正当性チェック（yyyy/mm/dd）.
+export type ValidateDateYYYYMMDDSlash = typeof validateDateYYYYMMDDSlash;
 export function validateDateYYYYMMDDSlash(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -321,15 +415,22 @@ export function validateDateYYYYMMDDSlash(
   // 空の場合はチェックしない
   if (!StringUtills.chkNotNull(targetStr)) return checkOk;
 
-  if (targetStr?.length != 10) return checkNg;
+  // フォーマットに一致しない場合はNG
+  if (
+    StringUtills.chkFormat(targetStr) !==
+    StringUtills.DATE_FORMAT.YYYY_MM_DD_SLASH
+  ) {
+    return checkNg;
+  }
 
   if (StringUtills.chkDate(targetStr)) return checkOk;
   return checkNg;
 }
 
-// 年月正当性チェック（yyyy-mm）.
+// 年月形式・正当性チェック（yyyy-mm）.
+export type ValidateDateYYYYMMHyphen = typeof validateDateYYYYMMHyphen;
 export function validateDateYYYYMMHyphen(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -341,15 +442,22 @@ export function validateDateYYYYMMHyphen(
   // 空の場合はチェックしない
   if (!StringUtills.chkNotNull(targetStr)) return checkOk;
 
-  if (targetStr?.length != 7) return checkNg;
+  // フォーマットに一致しない場合はNG
+  if (
+    StringUtills.chkFormat(targetStr) !==
+    StringUtills.DATE_FORMAT.YYYY_MM_HYPHEN
+  ) {
+    return checkNg;
+  }
 
   if (StringUtills.chkDate(targetStr + '-01')) return checkOk;
   return checkNg;
 }
 
-// 年月日正当性チェック（yyyy-mm-dd）.
+// 年月日形式・正当性チェック（yyyy-mm-dd）.
+export type ValidateDateYYYYMMDDHyphen = typeof validateDateYYYYMMDDHyphen;
 export function validateDateYYYYMMDDHyphen(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -361,15 +469,141 @@ export function validateDateYYYYMMDDHyphen(
   // 空の場合はチェックしない
   if (!StringUtills.chkNotNull(targetStr)) return checkOk;
 
-  if (targetStr?.length != 10) return checkNg;
+  // フォーマットに一致しない場合はNG
+  if (
+    StringUtills.chkFormat(targetStr) !==
+    StringUtills.DATE_FORMAT.YYYY_MM_DD_HYPHEN
+  ) {
+    return checkNg;
+  }
 
   if (StringUtills.chkDate(targetStr)) return checkOk;
   return checkNg;
 }
 
+// 日付FormToチェック.
+// 両方入力されていない場合、フォーマット誤りなどForm > To 以外はすべて許容
+export type ValidateDateFromTo = typeof validateDateFromTo;
+export function validateDateFromTo(
+  dateFromStr: string,
+  dateToStr: string,
+  dateFromName: string,
+  dateToName: string
+): ValidationResult {
+  // NG結果
+  const checkNg: ValidationResult = {
+    checkResult: false,
+    errorMMessagge:
+      dateFromName + 'は' + dateToName + 'より前に設定してください.',
+  };
+
+  // YYYYMMの場合
+  if (
+    !commonFromToChk(
+      dateFromStr,
+      dateToStr,
+      dateFromName,
+      dateToName,
+      validateDateYYYYMM
+    )
+  ) {
+    return checkNg;
+  }
+
+  // YYYY/MMの場合
+  if (
+    !commonFromToChk(
+      dateFromStr,
+      dateToStr,
+      dateFromName,
+      dateToName,
+      validateDateYYYYMMSlash
+    )
+  ) {
+    return checkNg;
+  }
+
+  // YYYY/MM/DDの場合
+  if (
+    !commonFromToChk(
+      dateFromStr,
+      dateToStr,
+      dateFromName,
+      dateToName,
+      validateDateYYYYMMDDSlash
+    )
+  ) {
+    return checkNg;
+  }
+  // YYYY-MMの場合
+  if (
+    !commonFromToChk(
+      dateFromStr,
+      dateToStr,
+      dateFromName,
+      dateToName,
+      validateDateYYYYMMHyphen
+    )
+  ) {
+    return checkNg;
+  }
+
+  // YYYY-MM-DDの場合
+  if (
+    !commonFromToChk(
+      dateFromStr,
+      dateToStr,
+      dateFromName,
+      dateToName,
+      validateDateYYYYMMDDHyphen
+    )
+  ) {
+    return checkNg;
+  }
+
+  return checkOk;
+}
+
+// 日付FormToチェック.
+export type CommonFromToChk = typeof commonFromToChk;
+function commonFromToChk(
+  dateFromStr: string,
+  dateToStr: string,
+  dateFromName: string,
+  dateToName: string,
+  validateFunction:
+    | ValidateDateYYYYMM
+    | ValidateDateYYYYMMSlash
+    | ValidateDateYYYYMMHyphen
+    | ValidateDateYYYYMMDD
+    | ValidateDateYYYYMMDDSlash
+    | ValidateDateYYYYMMDDHyphen
+): boolean {
+  if (
+    StringUtills.chkNotNull(dateFromStr) &&
+    StringUtills.chkNotNull(dateToStr)
+  ) {
+    if (
+      validateFunction(dateFromStr, dateFromName).checkResult &&
+      validateFunction(dateToStr, dateToName).checkResult
+    ) {
+      const dateFrom = new Date(dateFromStr);
+      const dateTo = new Date(dateToStr);
+      if (dateTo.getTime() <= dateFrom.getTime()) return false;
+      return true;
+    }
+    return true;
+  }
+  return true;
+}
+/**
+ * 各形式チェック
+ */
+
 // メールアドレスチェック
+export type ValidateEmail = typeof validateEmail;
 export function validateEmail(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -391,8 +625,9 @@ export function validateEmail(
 }
 
 // 電話番号チェック
-export function validateTelNumber(
-  targetStr: string | null,
+export type ValidatePhoneNumber = typeof validatePhoneNumber;
+export function validatePhoneNumber(
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
@@ -427,14 +662,15 @@ export function validateTelNumber(
 }
 
 // 郵便番号チェック（ハイフン任意）
+export type ValidatePostCode = typeof validatePostCode;
 export function validatePostCode(
-  targetStr: string | null,
+  targetStr: string,
   itemName: string
 ): ValidationResult {
   // NG結果
   const checkNg: ValidationResult = {
     checkResult: false,
-    errorMMessagge: itemName + 'が電話番号形式と一致しません.',
+    errorMMessagge: itemName + 'が郵便番号形式と一致しません.',
   };
 
   // 空の場合はチェックしない
