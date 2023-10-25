@@ -3,9 +3,10 @@ import React, { useState, FormEvent, ChangeEvent } from 'react';
 import * as Validation from '../../common/validation';
 import styles from '../../styles/Form.module.css';
 import Layout from '@/layout/layout';
+import async from '../api/submit';
 
 // 入力データ定義
-export type InputData = {
+type InputData = {
   nameJa: string;
   id: string;
   giftCode: string;
@@ -22,7 +23,7 @@ export type InputData = {
 };
 
 // Form初期値
-export const initialValues = {
+const initialValues = {
   nameJa: '',
   id: '',
   giftCode: '',
@@ -38,6 +39,16 @@ export const initialValues = {
   free: '',
 };
 
+// Form最小・最大値・固定値
+const FormMinMaxValue = {
+  GIFT_CODE_MIN: 8,
+  GIFT_CODE_MAX: 10,
+  ADDRESS_MAX: 50,
+  FREE_MAX: 300,
+  ID_FIXED: 8,
+} as const;
+
+// システムエラーメッセージ
 const SystemErrorMessage = {
   MESSAGE_001: '送信エラー発生',
 } as const;
@@ -50,7 +61,7 @@ const FormPage: NextPageWithLayout = () => {
   const [inputData, setInputData] = useState<InputData>(initialValues);
 
   // 送信
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoading(true);
     setError(null);
@@ -84,39 +95,165 @@ const FormPage: NextPageWithLayout = () => {
     } else {
       setIsLoading(false);
     }
-  }
+  };
+
+  // リセット
+  const onReset = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    setErrorMessageList([]);
+    setInputData(initialValues);
+    setIsLoading(false);
+  };
 
   // 入力チェック
-  function validation(): string[] {
+  const validation = (): string[] => {
     // エラーメッセージ
     let messageList: Array<string> = [];
 
-    // チェック対象文字列、チェック対象項目名、チェック結果
-    let item: string;
-    let itemName: string;
+    // チェック結果
     let result: Validation.ValidationResult;
 
     // 名前
-    item = inputData.nameJa;
-    itemName = '名前';
-
     // 必須チェック
-    result = Validation.validateRequired(item, itemName);
-    if (!result.checkResult) {
-      messageList.push(result.errorMMessagge);
-    }
+    result = Validation.validateRequired(inputData.nameJa, '名前');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // First Name
+    // 半角英字チェック
+    result = Validation.validateHalfAlphabet(
+      inputData.firstNameEn,
+      'FirstName'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // Last Name
+    // 半角英字チェック
+    result = Validation.validateHalfAlphabet(inputData.lastNameEn, 'LastName');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // ID
+    // 半角数字チェック
+    result = Validation.validateHarfNumber(inputData.id, 'ID');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 桁一致チェック
+    result = Validation.validateMaxHalfLength(
+      inputData.id,
+      FormMinMaxValue.ID_FIXED,
+      'ID'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // ギフトコード
+    // 半角英数チェック
+    result = Validation.validateHarfAlphabetNumber(
+      inputData.giftCode,
+      'ギフトコード'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 最小長チェック
+    result = Validation.validateWordLengthMin(
+      inputData.giftCode,
+      FormMinMaxValue.GIFT_CODE_MIN,
+      'ギフトコード'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 最大長チェック
+    result = Validation.validateWordLengthMax(
+      inputData.giftCode,
+      FormMinMaxValue.GIFT_CODE_MAX,
+      'ギフトコード'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 郵便番号
+    result = Validation.validateHarfChar(inputData.postCode, '郵便番号');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+    // 郵便番号形式チェック
+    result = Validation.validatePostCode(inputData.postCode, '郵便番号');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
 
     // 住所
-    item = inputData.address;
-    itemName = 'Address';
-    result = Validation.validateHarfChar(item, itemName);
-    if (!result.checkResult) {
-      messageList.push(result.errorMMessagge);
-    }
+    // 機種依存文字チェック
+    result = Validation.validateProhibitChar(inputData.address, '住所');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+    // 住所最大長チェック
+    result = Validation.validateWordLengthMax(
+      inputData.address,
+      FormMinMaxValue.ADDRESS_MAX,
+      '住所'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 希望訪問日
+    // 入力連動チェック
+    result = Validation.validateRequiredItems(
+      inputData.dateFrom,
+      inputData.dateTo,
+      '希望訪問日From',
+      '希望訪問日To'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 年月日形式・正当性チェック
+    result = Validation.validateDateYYYYMMDDHyphen(
+      inputData.dateFrom,
+      '希望訪問日From'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 年月日形式・正当性チェック
+    result = Validation.validateDateYYYYMMDDHyphen(
+      inputData.dateTo,
+      '希望訪問日To'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 年月日FromToチェック
+    result = Validation.validateDateFromTo(
+      inputData.dateFrom,
+      inputData.dateTo,
+      '希望訪問日From',
+      '希望訪問日To'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 誕生日
+    // 半角チェック
+    result = Validation.validateHarfChar(inputData.birthDay, '誕生日');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+    // 年月日形式・正当性チェック
+    result = Validation.validateDateYYYYMMDDSlash(inputData.birthDay, '誕生日');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 電話番号
+    // 半角チェック
+    result = Validation.validateHarfChar(inputData.phone, '電話番号');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+    // 電話番号形式チェック
+    result = Validation.validatePhoneNumber(inputData.phone, '電話番号');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+
+    // 備考
+    // 機種依存文字チェック
+    result = Validation.validateProhibitChar(inputData.free, '備考');
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
+    // 最大長チェック
+    result = Validation.validateWordLengthMax(
+      inputData.free,
+      FormMinMaxValue.FREE_MAX,
+      '備考'
+    );
+    if (!result.checkResult) messageList.push(result.errorMMessagge);
 
     return messageList;
-  }
+  };
 
+  // 入力値をStateにセット
   const handleInputChange = (
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -130,7 +267,7 @@ const FormPage: NextPageWithLayout = () => {
   return (
     <div className={styles.container}>
       <h1>form Sample</h1>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} onReset={onReset}>
         {error && <div style={{ color: 'red' }}>{error}</div>}
         {errorMessageList && (
           <ul>
@@ -144,13 +281,13 @@ const FormPage: NextPageWithLayout = () => {
           </ul>
         )}
         <div className={styles.item}>
-          <label htmlFor='name'>
+          <label htmlFor='nameJa'>
             <span className={styles.required}>*</span>名前
           </label>
           <input
             type='text'
-            id='name'
-            name='name'
+            id='nameJa'
+            name='nameJa'
             placeholder='田中太郎'
             value={inputData.nameJa}
             onChange={handleInputChange}
@@ -287,7 +424,9 @@ const FormPage: NextPageWithLayout = () => {
           <button type='submit' disabled={isLoading}>
             {isLoading ? 'Loading...' : 'Submit'}
           </button>
-          <button type='reset'>Reset</button>
+          <button type='reset' disabled={isLoading}>
+            Reset
+          </button>
         </div>
       </form>
     </div>
