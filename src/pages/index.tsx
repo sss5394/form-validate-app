@@ -4,6 +4,6 @@ import HomePage from '@/pages/home/home';
 
 const Home: NextPageWithLayout = () => <HomePage />;
 
-Home.getLayout = (page) => <Layout>{page}</Layout>;
+Home.getLayout = (page) => <Layout title='Home'>{page}</Layout>;
 
 export default Home;

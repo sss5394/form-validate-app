@@ -3,7 +3,6 @@ import React, { useState, FormEvent, ChangeEvent } from 'react';
 import * as Validation from '../../common/validation';
 import styles from '../../styles/Form.module.css';
 import Layout from '@/layout/layout';
-import async from '../api/submit';
 
 // 入力データ定義
 type InputData = {
@@ -265,15 +264,18 @@ const FormPage: NextPageWithLayout = () => {
   };
 
   return (
-    <div className={styles.container}>
-      <h1>form Sample</h1>
+    <>
       <form onSubmit={onSubmit} onReset={onReset}>
         {error && <div style={{ color: 'red' }}>{error}</div>}
         {errorMessageList && (
           <ul>
             {errorMessageList.map((message, index) => {
               return (
-                <li id={'error' + index} key={'error' + index}>
+                <li
+                  id={'error' + index}
+                  key={'error' + index}
+                  className={styles.errMsg}
+                >
                   {message}
                 </li>
               );
@@ -429,10 +431,12 @@ const FormPage: NextPageWithLayout = () => {
           </button>
         </div>
       </form>
-    </div>
+    </>
   );
 };
 
 // レイアウト設定（共通レイアウト）
-FormPage.getLayout = (page) => <Layout>{page}</Layout>;
+FormPage.getLayout = (page) => (
+  <Layout title='フォームサンプル（自前バリデーション）'>{page}</Layout>
+);
 export default FormPage;

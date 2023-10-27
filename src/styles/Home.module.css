@@ -1,34 +1,11 @@
-.container {
-  max-width: auto;
-  padding: 0 1rem;
-  margin: 1rem 2rem;
-  word-break: break-all;
+.anchor {
+	display: inline-block;
+	padding: 1rem 1rem;
+	font-size: 1.2rem;
 }
-
-.main {
-  min-height: 60vh;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
-@media (max-width: 480px) {
-  .contents {
-    overflow-wrap: normal;
-  }
-}
-
-.header {
-  display: -webkit-flex;
-  display: flex;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  align-items: center;
-  min-height: 10vh;
-}
-
-.headerText {
-  margin-left: 30px;
+.anchor:hover  {
+  transform-origin: left;
+  transform: scaleX(1);
+  text-decoration:underline;
+  text-decoration-color:#88ff00;
 }

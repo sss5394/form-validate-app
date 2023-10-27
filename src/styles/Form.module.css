@@ -1,17 +1,9 @@
-/* Formをラッパーするクラス */
-.container {
-  padding: 8rem;
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-}
-
 /* 入力要素（全体） */
 .item {
   margin-top: 1rem;
   min-height: 1.5rem;
   font-size: 1rem;
-  width: 700px;
+  min-width: 50rem;
 }
 
 /* 入力要素（ラベル） */
@@ -19,7 +11,7 @@
   vertical-align: top;
   display: inline-block;
   text-align: right;
-  width: 100px;
+  width: 6rem;
 }
 
 .item label.linkage{
@@ -29,14 +21,14 @@
 /* 入力要素（ラベル必須マーク） */
 .item label span.required{
   color: red;
-  margin-right: 5px;
+  margin-right: 1rem;
 }
 
 /* 入力要素（input） */
 .item input{
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 200px;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  width: 10rem;
 }
 
 /* 入力要素（textarea） */
@@ -49,7 +41,19 @@
 
 /* 入力要素（ボタン） */
 .item button {
-  width: 70px;
-  height: 20px;
-  margin: 10px
+  width: 5rem;
+  height: 1.5rem;
+  margin: 1rem
+}
+
+.item button:hover {
+  transition-duration: 1000ms;
+  background-color: #001aff
+}
+
+/* 入力エラーメッセージ */
+li.errMsg {
+  list-style:none;
+  font-weight: bold;
+  color: #ff0000;
 }
