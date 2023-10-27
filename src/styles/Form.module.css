@@ -56,4 +56,5 @@ li.errMsg {
   list-style:none;
   font-weight: bold;
   color: #ff0000;
+  margin-top: 0.5rem;
 }
